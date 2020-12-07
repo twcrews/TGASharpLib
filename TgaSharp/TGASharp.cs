@@ -617,7 +617,7 @@ namespace Crews.Utility.TgaSharp
     /// (Bit 4 (bit 0 in enum) is for left-to-right ordering and bit 5 (bit 1 in enum) is for
     /// topto-bottom ordering as shown below.)
     /// </summary>
-    public enum TgaImgOrigin : byte
+    public enum TgaImageOrigin : byte
     {
         BottomLeft = 0,
         BottomRight,
@@ -646,7 +646,7 @@ namespace Crews.Utility.TgaSharp
     /// A value of 3 in the Attributes Type Field(field 23) would indicate that the color components
     /// of the pixel have already been scaled by the value in the Alpha channel.
     /// </summary>
-    public enum TgaAttrType : byte
+    public enum TgaAttributeType : byte
     {
         NoAlpha = 0,
         UndefinedAlphaCanBeIgnored,
@@ -1856,7 +1856,7 @@ namespace Crews.Utility.TgaSharp
     /// </summary>
     public class TgaImageDescriptor : ICloneable
     {
-        TgaImgOrigin imageOrigin = 0; //bits 5-4
+        TgaImageOrigin imageOrigin = 0; //bits 5-4
         byte alphaChannelBits = 0; //bits 3-0
 
         /// <summary>
@@ -1873,14 +1873,14 @@ namespace Crews.Utility.TgaSharp
         /// <see cref="ImageOrigin"/>, 3-0 used as alpha channel bits or number of overlay bits.</param>
         public TgaImageDescriptor(byte b)
         {
-            imageOrigin = (TgaImgOrigin)((b & 0x30) >> 4);
+            imageOrigin = (TgaImageOrigin)((b & 0x30) >> 4);
             alphaChannelBits = (byte)(b & 0x0F);
         }
 
         /// <summary>
         /// Gets or Sets Image Origin bits (select from enum only, don'n use 5-4 bits!).
         /// </summary>
-        public TgaImgOrigin ImageOrigin
+        public TgaImageOrigin ImageOrigin
         {
             get { return imageOrigin; }
             set { imageOrigin = value; }
@@ -3204,7 +3204,7 @@ namespace Crews.Utility.TgaSharp
         uint colorCorrectionOffset = 0;
         uint postageStampOffset = 0;
         uint scanLineOffset = 0;
-        TgaAttrType attributesType = TgaAttrType.NoAlpha;
+        TgaAttributeType attributesType = TgaAttributeType.NoAlpha;
         uint[] scanLineTable = null;
         TgaPostageStampImage postageStampImage = null;
         ushort[] colorCorrectionTable = null;
@@ -3244,7 +3244,7 @@ namespace Crews.Utility.TgaSharp
             colorCorrectionOffset = BitConverter.ToUInt32(Bytes, 482);
             postageStampOffset = BitConverter.ToUInt32(Bytes, 486);
             scanLineOffset = BitConverter.ToUInt32(Bytes, 490);
-            attributesType = (TgaAttrType)Bytes[494];
+            attributesType = (TgaAttributeType)Bytes[494];
 
             if (extensionSize > MinSize)
                 otherDataInExtensionArea = ByteConverter.GetElements(Bytes, 495, Bytes.Length - MinSize);
@@ -3505,7 +3505,7 @@ namespace Crews.Utility.TgaSharp
         /// A value of 3 in the Attributes Type Field(field 23) would indicate that the color components
         /// of the pixel have already been scaled by the value in the Alpha channel.
         /// </summary>
-        public TgaAttrType AttributesType
+        public TgaAttributeType AttributesType
         {
             get { return attributesType; }
             set { attributesType = value; }
@@ -4099,7 +4099,7 @@ namespace Crews.Utility.TgaSharp
                 ExtArea = new TgaExtensionArea
                 {
                     DateTimeStamp = new TgaDateTime(DateTime.UtcNow),
-                    AttributesType = AttrBits > 0 ? TgaAttrType.UsefulAlpha : TgaAttrType.NoAlpha
+                    AttributesType = AttrBits > 0 ? TgaAttributeType.UsefulAlpha : TgaAttributeType.NoAlpha
                 };
             }
         }
@@ -4257,7 +4257,7 @@ namespace Crews.Utility.TgaSharp
         => Clone();
 
         /// <summary>
-        /// Flip <see cref="TGA"/> directions, for more info see <see cref="TgaImgOrigin"/>.
+        /// Flip <see cref="TGA"/> directions, for more info see <see cref="TgaImageOrigin"/>.
         /// </summary>
         /// <param name="Horizontal">Flip horizontal.</param>
         /// <param name="Vertical">Flip vertical.</param>
@@ -4265,7 +4265,7 @@ namespace Crews.Utility.TgaSharp
         {
             int NewOrigin = (int)Header.ImageSpec.ImageDescriptor.ImageOrigin;
             NewOrigin ^= ((Vertical ? 0x20 : 0) | (Horizontal ? 0x10 : 0));
-            Header.ImageSpec.ImageDescriptor.ImageOrigin = (TgaImgOrigin)NewOrigin;
+            Header.ImageSpec.ImageDescriptor.ImageOrigin = (TgaImageOrigin)NewOrigin;
         }
 
         /// <summary>
@@ -4666,9 +4666,9 @@ namespace Crews.Utility.TgaSharp
                 };
 
                 if (Header.ImageSpec.ImageDescriptor.AlphaChannelBits > 0)
-                    ExtArea.AttributesType = TgaAttrType.UsefulAlpha;
+                    ExtArea.AttributesType = TgaAttributeType.UsefulAlpha;
                 else
-                    ExtArea.AttributesType = TgaAttrType.NoAlpha;
+                    ExtArea.AttributesType = TgaAttributeType.NoAlpha;
             }
         }
         #endregion
@@ -4875,7 +4875,7 @@ namespace Crews.Utility.TgaSharp
             {
                 Header.ImageSpec.ImageWidth = (ushort)bmp.Width;
                 Header.ImageSpec.ImageHeight = (ushort)bmp.Height;
-                Header.ImageSpec.ImageDescriptor.ImageOrigin = TgaImgOrigin.TopLeft;
+                Header.ImageSpec.ImageDescriptor.ImageOrigin = TgaImageOrigin.TopLeft;
 
                 switch (bmp.PixelFormat)
                 {
@@ -5029,17 +5029,17 @@ namespace Crews.Utility.TgaSharp
 
                             if (IsAlpha)
                             {
-                                ExtArea.AttributesType = TgaAttrType.UsefulAlpha;
+                                ExtArea.AttributesType = TgaAttributeType.UsefulAlpha;
 
                                 if (IsPreAlpha)
-                                    ExtArea.AttributesType = TgaAttrType.PreMultipliedAlpha;
+                                    ExtArea.AttributesType = TgaAttributeType.PreMultipliedAlpha;
                             }
                             else
                             {
-                                ExtArea.AttributesType = TgaAttrType.NoAlpha;
+                                ExtArea.AttributesType = TgaAttributeType.NoAlpha;
 
                                 if (Header.ImageSpec.ImageDescriptor.AlphaChannelBits > 0)
-                                    ExtArea.AttributesType = TgaAttrType.UndefinedAlphaButShouldBeRetained;
+                                    ExtArea.AttributesType = TgaAttributeType.UndefinedAlphaButShouldBeRetained;
                             }
                         }
                         #endregion
@@ -5260,13 +5260,13 @@ namespace Crews.Utility.TgaSharp
                 {
                     switch (ExtArea.AttributesType)
                     {
-                        case TgaAttrType.NoAlpha:
-                        case TgaAttrType.UndefinedAlphaCanBeIgnored:
-                        case TgaAttrType.UndefinedAlphaButShouldBeRetained:
+                        case TgaAttributeType.NoAlpha:
+                        case TgaAttributeType.UndefinedAlphaCanBeIgnored:
+                        case TgaAttributeType.UndefinedAlphaButShouldBeRetained:
                             UseAlpha = false;
                             break;
-                        case TgaAttrType.UsefulAlpha:
-                        case TgaAttrType.PreMultipliedAlpha:
+                        case TgaAttributeType.UsefulAlpha:
+                        case TgaAttributeType.PreMultipliedAlpha:
                         default:
                             break;
                     }
@@ -5303,7 +5303,7 @@ namespace Crews.Utility.TgaSharp
                         if (UseAlpha)
                         {
                             var f = Footer;
-                            if (ExtArea?.AttributesType == TgaAttrType.PreMultipliedAlpha)
+                            if (ExtArea?.AttributesType == TgaAttributeType.PreMultipliedAlpha)
                                 PixFormat = PixelFormat.Format32bppPArgb;
                             else
                                 PixFormat = PixelFormat.Format32bppArgb;
@@ -5424,16 +5424,16 @@ namespace Crews.Utility.TgaSharp
                 #region Flip Image
                 switch (Header.ImageSpec.ImageDescriptor.ImageOrigin)
                 {
-                    case TgaImgOrigin.BottomLeft:
+                    case TgaImageOrigin.BottomLeft:
                         BMP.RotateFlip(RotateFlipType.RotateNoneFlipY);
                         break;
-                    case TgaImgOrigin.BottomRight:
+                    case TgaImageOrigin.BottomRight:
                         BMP.RotateFlip(RotateFlipType.RotateNoneFlipXY);
                         break;
-                    case TgaImgOrigin.TopLeft:
+                    case TgaImageOrigin.TopLeft:
                     default:
                         break;
-                    case TgaImgOrigin.TopRight:
+                    case TgaImageOrigin.TopRight:
                         BMP.RotateFlip(RotateFlipType.RotateNoneFlipX);
                         break;
                 }
