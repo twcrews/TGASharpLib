@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AssemblyName>Utility.TgaSharp</AssemblyName>
+    <RootNamespace>Crews.Utility.TgaSharp</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
