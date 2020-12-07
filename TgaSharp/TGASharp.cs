@@ -646,7 +646,7 @@ namespace Crews.Utility.TgaSharp
     /// A value of 3 in the Attributes Type Field(field 23) would indicate that the color components
     /// of the pixel have already been scaled by the value in the Alpha channel.
     /// </summary>
-    public enum TgaAttributeType : byte
+    public enum TgaAlphaType : byte
     {
         NoAlpha = 0,
         UndefinedAlphaCanBeIgnored,
@@ -3204,7 +3204,7 @@ namespace Crews.Utility.TgaSharp
         uint colorCorrectionOffset = 0;
         uint postageStampOffset = 0;
         uint scanLineOffset = 0;
-        TgaAttributeType attributesType = TgaAttributeType.NoAlpha;
+        TgaAlphaType attributesType = TgaAlphaType.NoAlpha;
         uint[] scanLineTable = null;
         TgaPostageStampImage postageStampImage = null;
         ushort[] colorCorrectionTable = null;
@@ -3244,7 +3244,7 @@ namespace Crews.Utility.TgaSharp
             colorCorrectionOffset = BitConverter.ToUInt32(Bytes, 482);
             postageStampOffset = BitConverter.ToUInt32(Bytes, 486);
             scanLineOffset = BitConverter.ToUInt32(Bytes, 490);
-            attributesType = (TgaAttributeType)Bytes[494];
+            attributesType = (TgaAlphaType)Bytes[494];
 
             if (extensionSize > MinSize)
                 otherDataInExtensionArea = ByteConverter.GetElements(Bytes, 495, Bytes.Length - MinSize);
@@ -3505,7 +3505,7 @@ namespace Crews.Utility.TgaSharp
         /// A value of 3 in the Attributes Type Field(field 23) would indicate that the color components
         /// of the pixel have already been scaled by the value in the Alpha channel.
         /// </summary>
-        public TgaAttributeType AttributesType
+        public TgaAlphaType AttributesType
         {
             get { return attributesType; }
             set { attributesType = value; }
@@ -4099,7 +4099,7 @@ namespace Crews.Utility.TgaSharp
                 ExtArea = new TgaExtensionArea
                 {
                     DateTimeStamp = new TgaDateTime(DateTime.UtcNow),
-                    AttributesType = AttrBits > 0 ? TgaAttributeType.UsefulAlpha : TgaAttributeType.NoAlpha
+                    AttributesType = AttrBits > 0 ? TgaAlphaType.UsefulAlpha : TgaAlphaType.NoAlpha
                 };
             }
         }
@@ -4666,9 +4666,9 @@ namespace Crews.Utility.TgaSharp
                 };
 
                 if (Header.ImageSpec.ImageDescriptor.AlphaChannelBits > 0)
-                    ExtArea.AttributesType = TgaAttributeType.UsefulAlpha;
+                    ExtArea.AttributesType = TgaAlphaType.UsefulAlpha;
                 else
-                    ExtArea.AttributesType = TgaAttributeType.NoAlpha;
+                    ExtArea.AttributesType = TgaAlphaType.NoAlpha;
             }
         }
         #endregion
@@ -5029,17 +5029,17 @@ namespace Crews.Utility.TgaSharp
 
                             if (IsAlpha)
                             {
-                                ExtArea.AttributesType = TgaAttributeType.UsefulAlpha;
+                                ExtArea.AttributesType = TgaAlphaType.UsefulAlpha;
 
                                 if (IsPreAlpha)
-                                    ExtArea.AttributesType = TgaAttributeType.PreMultipliedAlpha;
+                                    ExtArea.AttributesType = TgaAlphaType.PreMultipliedAlpha;
                             }
                             else
                             {
-                                ExtArea.AttributesType = TgaAttributeType.NoAlpha;
+                                ExtArea.AttributesType = TgaAlphaType.NoAlpha;
 
                                 if (Header.ImageSpec.ImageDescriptor.AlphaChannelBits > 0)
-                                    ExtArea.AttributesType = TgaAttributeType.UndefinedAlphaButShouldBeRetained;
+                                    ExtArea.AttributesType = TgaAlphaType.UndefinedAlphaButShouldBeRetained;
                             }
                         }
                         #endregion
@@ -5260,13 +5260,13 @@ namespace Crews.Utility.TgaSharp
                 {
                     switch (ExtArea.AttributesType)
                     {
-                        case TgaAttributeType.NoAlpha:
-                        case TgaAttributeType.UndefinedAlphaCanBeIgnored:
-                        case TgaAttributeType.UndefinedAlphaButShouldBeRetained:
+                        case TgaAlphaType.NoAlpha:
+                        case TgaAlphaType.UndefinedAlphaCanBeIgnored:
+                        case TgaAlphaType.UndefinedAlphaButShouldBeRetained:
                             UseAlpha = false;
                             break;
-                        case TgaAttributeType.UsefulAlpha:
-                        case TgaAttributeType.PreMultipliedAlpha:
+                        case TgaAlphaType.UsefulAlpha:
+                        case TgaAlphaType.PreMultipliedAlpha:
                         default:
                             break;
                     }
@@ -5303,7 +5303,7 @@ namespace Crews.Utility.TgaSharp
                         if (UseAlpha)
                         {
                             var f = Footer;
-                            if (ExtArea?.AttributesType == TgaAttributeType.PreMultipliedAlpha)
+                            if (ExtArea?.AttributesType == TgaAlphaType.PreMultipliedAlpha)
                                 PixFormat = PixelFormat.Format32bppPArgb;
                             else
                                 PixFormat = PixelFormat.Format32bppArgb;
