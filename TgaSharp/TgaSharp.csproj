@@ -4,10 +4,29 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <AssemblyName>Utility.TgaSharp</AssemblyName>
     <RootNamespace>Crews.Utility.TgaSharp</RootNamespace>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageId>Crews.Utility.TgaSharp</PackageId>
+    <Authors>Alexandr Zelenskyi, Tommy Crews</Authors>
+    <Product>TgaSharp</Product>
+    <Description>A port of the TGASharpLib project for .NET Core.</Description>
+    <Copyright>Copyright (c) 2017 TGASharpLib, 2020 TgaSharp</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/ALEXGREENALEX/TGASharpLib</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/twcrews/TgaSharp</RepositoryUrl>
+    <RepositoryType>Git</RepositoryType>
+    <PackageTags>tga;targa;imagrawing;image</PackageTags>
+    <PackageIcon>icon.png</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="System.Drawing.Common" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="icon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
