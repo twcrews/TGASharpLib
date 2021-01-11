@@ -1,6 +1,11 @@
 # TgaSharp
 Port of [TGASharpLib](https://github.com/ALEXGREENALEX/TGASharpLib) for .NET Core.
 
+## NuGet
+This port is [available for installation](https://www.nuget.org/packages/Crews.Utility.TgaSharp/) as a NuGet package:
+
+`Install-Package Crews.Utility.TgaSharp`
+
 ## Renamed Objects
 The following objects have been renamed in code to more closely follow conventions. References will need to be updated in projects using this library.
 
