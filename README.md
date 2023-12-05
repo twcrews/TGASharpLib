@@ -1,3 +1,5 @@
+⚠️ I will no longer be maintaining this repo. Please feel free to fork or otherwise take over this project.
+
 # TgaSharp
 Port of [TGASharpLib](https://github.com/ALEXGREENALEX/TGASharpLib) for .NET Core.
 
